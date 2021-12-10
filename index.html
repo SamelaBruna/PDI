@@ -39,7 +39,8 @@
 				<div class="profile-section pt-3 pt-lg-0">
 				    <img class="profile-image mb-3 rounded-circle mx-auto" src="assets/images/teste2.png" alt="image" >			
 					
-					<div class="bio mb-3">Olá, meu nome é Sâmela sou estudante de Engenharia Mecatrônica da UFRN e está página é dedicada à disciplina de Processamento Digital de Imagens.<br></div><!--//bio-->
+					<div class="bio mb-3">Olá, meu nome é Sâmela sou estudante de Engenharia Mecatrônica da UFRN e está página é dedicada à disciplina de Processamento Digital de Imagens.
+						Códigos disponíveis no GitHub abaixo:<br></div><!--//bio-->
 					<ul class="social-list list-inline py-3 mx-auto">
 			            <!--<li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li> -->
 			            <li class="list-inline-item"><a href="https://www.linkedin.com/in/samela-bruna-ferreira" target="_blank"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
@@ -49,7 +50,19 @@
 			        </ul><!--//social-list-->
 			        <hr> 
 				</div><!--//profile-section-->
-				
+
+				<ol class="navbar-nav flex-column text-left">
+					<li class="nav-item active"><a class="nav-link" href="#t1">Manipulando Pixels  </a></li>
+					<li class="nav-item active"><a class="nav-link" href="#t2">Preenchendo Regiões  </a></li>
+					<li class="nav-item active"><a class="nav-link" href="#t3">Manipulação de histogramas  </a></li>
+					<li class="nav-item active"><a class="nav-link" href="#t4">Filtragem domínio espacial I </a></li>
+					<!--<li class="nav-item active"><a class="nav-link" href="#t2">t5  </a></li>
+					<li class="nav-item active"><a class="nav-link" href="#t2">t6  </a></li>
+					<li class="nav-item active"><a class="nav-link" href="#t2">t7  </a></li>
+					<li class="nav-item active"><a class="nav-link" href="#t2">t8  </a></li>-->
+
+					
+				</ul>
 				<!--<ul class="navbar-nav flex-column text-left">
 					<li class="nav-item active">
 					    <a class="nav-link" href="index.html"><i class="fas fa-home fa-fw mr-2"></i>Blog Home <span class="sr-only">(current)</span></a> 
@@ -79,7 +92,7 @@
 	    <article class="blog-post px-3 py-5 p-md-5">
 		    <div class="container">
 			    <header class="blog-post-header">
-				    <h2 class="title mb-2">Manipulando Pixels em uma imagem</h2>
+				    <h2 id="t1" class="title mb-2">Manipulando Pixels em uma imagem</h2>
 				    
 				    <div class="meta mb-3"></div>
 			    </header>
@@ -224,7 +237,7 @@ cv.destroyAllWindows()
 
 					
 
-				    <h2 class="posImg">Preenchendo Regiões</h2>
+				    <h2 id="t2" class="posImg">Preenchendo Regiões</h2>
 					<h4>Exercicio 1</h4>
 					<p style="color:#6C51A4;"><i>Observando-se o programa labeling.cpp como exemplo, é possível verificar que caso existam mais de 255 objetos na cena, o processo de rotulação poderá ficar comprometido. Identifique a situação em que isso ocorre e proponha uma solução para este problema.</i> </p>
 
@@ -307,9 +320,337 @@ cv.destroyAllWindows()
 				    </pre>
 
 				    <h5>Resultado:</h5>
-						 <div class="ladoalado"><img src="assets/images/finallabble.png"></div> 
+						 <div class="ladoalado" ><!--style="margin-bottom: 30px;">-->
+						 	<img src="assets/images/finallabble.png">
+						    
+						 </div> 
 
-				    <h3 class="mt-5 mb-3">Code Block Example</h3>
+						 <div class="ladoalado">
+						 	 <div class="ladoalado"><img src="assets/images/lab2.png"></div>
+						    
+						 </div> 
+
+						 
+
+
+				    <h2 id="t3" class="posImg">Manipulação de Histogramas</h2>
+ 					<div class="meta mb-3"></div>
+					<h4>Exercicio 1</h4>
+					<p style="color:#6C51A4;"><i>Utilizando o programa exemplos/histogram.cpp como referência, implemente um programa equalize.cpp. Este deverá, para cada imagem capturada, realizar a equalização do histogram antes de exibir a imagem. Teste sua implementação apontando a câmera para ambientes com iluminações variadas e observando o efeito gerado. Assuma que as imagens processadas serão em tons de cinza.</i> </p>
+
+
+					<p>Um histograma tem como objetivo representar de maneira gráfica a distribuição de intensidades de uma imagens, ou seja, quantificar o número de pixels para cada valor de tom.Quando uma imagem é equalizada o seu contraste é melhorado. Para esse exercicio é necessário fazer a leitura dos frames da câmera por meio da função do cap.read(), após isso colocar a imagem em escala de cinza e fazer o cálculo do histograma através da função do opencv calcHist() e também calcular o histograma equalizado com equalizeHist(), feito isso plotar o gráfico dos histogramas e mostrar o vídeo sendo equalizado em tempo real. Abaixo no resultado a cor vermelha representa o gráfico do histograma e na cor azul o gráfico do histograma equalizado. </p>
+
+
+					<pre>
+					    <code>
+import cv2 as cv
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+cap = cv.VideoCapture(0)
+
+if not cap.isOpened():
+    print("Cannot open camera")
+    exit()
+while True:
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+    # if frame is read correctly ret is True
+    if not ret:
+        print("Can't receive frame (stream end?). Exiting ...")
+        break
+
+    # Our operations on the frame come here
+    imgGray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    histNormal = cv.calcHist([imgGray], [0], None, [256], [0, 256])
+    imgEqualized = cv.equalizeHist(imgGray)
+    histEqualized = cv.calcHist([imgEqualized],[0],None,[256],[0,256])
+    both = np.hstack((imgGray,imgEqualized))
+
+    plt.plot(histNormal, 'r')
+    plt.plot(histEqualized, 'b')
+    plt.xlim([0, 256])
+    plt.show()
+
+    # Display the resulting before and after
+    cv.imshow('Left: Normal Image  Right: Equalized Image', both)
+
+    if cv.waitKey(1) == ord('q'):
+        break
+# When everything done, release the capture
+cap.release()
+cv.destroyAllWindows()
+					    </code>
+				    </pre>
+
+				    <h5>Resultado:</h5>
+							<div class="imgWithCaption" style="margin-bottom:30px">
+						 	<img src="assets/images/Janela Fechada1.png">
+						 	<span>Imagem com a Persiana Fechada</span>
+						    
+						 </div> 
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/myplotJanelaFechada.png"></div>
+						     <span>Histograma e Equalização com Persiana Fechada </span>
+						 </div> 
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/Janela Aberta1.png"></div>
+						     <span>Imagem com a Persiana Aberta</span>
+						 </div> 
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/myplotJA.png"></div>
+						     <span>Histograma e Equalização com Persiana Aberta</span>
+						 </div> 
+
+				    <!--<div class="ladoalado"><img src="assets/images/finallabble.png"></div>-->
+					 	
+
+
+					 <h4>Exercicio 2</h4>
+					<p style="color:#6C51A4;"><i>Utilizando o programa exemplos/histogram.cpp como referência, implemente um programa motiondetector.cpp. Este deverá continuamente calcular o histograma da imagem (apenas uma componente de cor é suficiente) e compará-lo com o último histograma calculado. Quando a diferença entre estes ultrapassar um limiar pré-estabelecido, ative um alarme. Utilize uma função de comparação que julgar conveniente.</i> </p>
+
+		    
+					<p>Para este exercicio a solução utilizada é aplicar uma diferença entre os histograma do vídeo verificando o frame anterior e o atual, se essa diferença for um valor maior ou igual a 50(podendo mudar para uma maior sensiblidade) um contador de diferenças é aplicado se houverem X diferenças maior ou igual a esse valor de sensibilidade é considerado que houve um movimento no vídeo.  </p> 
+
+					<pre>
+					    <code>
+import cv2 as cv
+import numpy as np
+
+
+cap = cv.VideoCapture(0)
+ret, frame = cap.read()
+imgGray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+imgHist_previous = cv.calcHist([imgGray],[0],None,[256],[0,256])
+
+
+if not cap.isOpened():
+    print("Cannot open camera")
+    exit()
+while True:
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+    # if frame is read correctly ret is True
+    if not ret:
+        print("Can't receive frame (stream end?). Exiting ...")
+        break
+
+    # Our operations on the frame come here
+    imgGray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    imgHist_actual = cv.calcHist([imgGray],[0],None,[256],[0,256])
+    sizeImgHis = np.shape(imgHist_actual)
+    counterDif = 0
+    for i in range(0,sizeImgHis[0]):
+        difBetw = imgHist_previous[i] - imgHist_actual[i]
+        if difBetw >= 50:
+            counterDif += 1
+    if counterDif >= 80:
+        print("Movimento Detectado ")
+    imgHist_previous = imgHist_actual.copy()
+
+    cv.imshow('Actual', imgGray)
+
+    if cv.waitKey(1) == ord('q'):
+        break
+
+# When everything done, release the capture
+cap.release()
+cv.destroyAllWindows()
+					    </code>
+				    </pre>	
+
+				    <h5>Resultado:</h5>
+				    <!--<div class="ladoalado"><img src="assets/images/finallabble.png"></div>-->
+
+				    <div class="embed-responsive embed-responsive-16by9">
+					   <iframe width="560" height="315" src="assets/Videos/movimento.mp4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
+					</div>
+
+
+				    <h2 id="t4" class="posImg">Filtragem no Domínio Espacial I</h2>
+					<h4>Exercicio 1</h4>
+					<p style="color:#6C51A4;"><i>Utilizando o programa exemplos/filtroespacial.cpp como referência, implemente um programa laplgauss.cpp. O programa deverá acrescentar mais uma funcionalidade ao exemplo fornecido, permitindo que seja calculado o laplaciano do gaussiano das imagens capturadas. Compare o resultado desse filtro com a simples aplicação do filtro laplaciano.</i> </p>
+
+		    
+					<p>Esse exercicio tem como objetivo a aplicação de filtros em tempo real adicionando a funcionalidade do filtro de gauss+Laplaciano de modo a verificar que aplicando ambos os filtros em relação apenas ao Laplaciano o ruído é atenuado e com isso as bordas ficam mais acentudas e mais faceis de serem identificadas.Nessa atividade a função que foi utilizada para as operações com filtro se chama filter2D da própria biblioteca do Opencv. </p> 
+
+					<p>Na função criada denominada <i>applyFilter</i> a imagem é transformada em escala de cinza e o filtro é aplicado a partir da máscara escolhida pelo teclado passando-o como parâmetro e também é verificado se o absoluto é escolhido.</p>
+
+										<pre>
+					    <code>
+import cv2 as cv
+import numpy as np
+
+media = np.array([[0.1111, 0.1111, 0.1111], [0.1111, 0.1111,0.1111], [0.1111, 0.1111, 0.1111]], dtype=np.float32 )
+gauss = np.array([[0.0625, 0.125,  0.0625], [0.125, 0.25,0.125],  [0.0625, 0.125,  0.0625]], dtype=np.float32)
+horizontal = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.float32)
+vertical = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]], dtype=np.float32)
+laplacian = np.array([[0, -1, 0], [-1, 4, -1], [0, -1, 0]], dtype=np.float32)
+boost = np.array([[0, -1, 0], [-1, 5.2, -1], [0, -1, 0]], dtype=np.float32)
+
+def applyFilter(masks, grayedImage, absolute):
+  cv.imshow("Original", grayedImage)
+  print(absolute)
+  grayedImageF32 = np.array(grayedImage, dtype=np.float32)
+  result = np.array(grayedImageF32, dtype=np.uint8)
+
+  if (len(masks) == 1):
+    frameFiltered = cv.filter2D(grayedImageF32, -1, masks[0])
+    if absolute: 
+      frameFiltered = abs(frameFiltered)
+
+    result = np.array(frameFiltered, dtype=np.uint8)
+  else:
+    currentFiltered = cv.filter2D(grayedImageF32, -1, masks[0])
+    for mask in masks[1:]:
+      frameFiltered = cv.filter2D(currentFiltered, -1, mask)
+      if absolute: 
+        frameFiltered = abs(frameFiltered)
+
+    result = np.array(frameFiltered, dtype=np.uint8)
+
+  cv.imshow("Filtered", result) 
+
+
+
+cap = cv.VideoCapture(0)
+mask = [media];
+absolute = True
+
+print("\Press the key correspondent to the filter: \n"
+        "a - absoluto\n"
+        "m - media\n"
+        "g - gauss\n"
+        "v - vertical\n"
+        "h - horizontal\n"
+        "l - laplaciano\n"
+        "p - gaussiano com laplacian\n"
+        "esc - sair\n")
+
+if not cap.isOpened():
+  print("Cannot open camera")
+  exit()
+
+while True:
+      # Capture frame-by-frame
+  ret, frame = cap.read()
+  # if frame is read correctly ret is True
+  if not ret:
+    print("Can't receive frame (stream end?). Exiting ...")
+    break
+
+  grayedImage = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+
+  key = cv.waitKey(1)
+  if key == ord('m'):
+    mask = [media]
+
+  elif key == ord('a'):
+    absolute = not absolute
+
+  elif key == ord('g'):
+    mask = [gauss]
+
+  elif key == ord('h'):
+    mask = [horizontal]
+
+  elif key == ord('v'):
+    mask = [vertical]
+
+  elif key == ord('l'):
+    mask = [laplacian]
+
+  elif key == ord('b'):
+    mask = [boost]
+
+  elif key == ord('p'):
+    mask = [gauss, laplacian]
+
+  elif key == 27: #esc
+    break
+
+  applyFilter(mask, grayedImage, absolute)
+
+
+  
+
+					    </code>
+				    </pre>	
+
+				    
+				    <h5>Resultado:</h5>
+				    <!--<div class="ladoalado"><img src="assets/images/finallabble.png"></div>-->
+				    <div class="imgWithCaption" style="margin-bottom:30px">
+						 	<img src="assets/images/Original.png">
+						 	<span>Original</span>
+						    
+						 </div> 
+
+
+						  <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/GaussLaplace.png"></div>
+						     <span>Filtro de Gauss + Laplace</span>
+						  </div>
+
+						   <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/GaussLaplaceAbsolut.png"></div>
+						     <span>Filtro de Gauss + Laplace com Absoluto</span>
+						  </div>
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/Media.png"></div>
+						     <span>Filtro Média</span>
+						 </div>
+
+						
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/Laplacian.png"></div>
+						     <span>Filtro Laplaciano</span>
+						 </div>
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/LaplacianAbsolut.png"></div>
+						     <span>Filtro Laplaciano com Absoluto</span>
+						 </div> 
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/Horizontal.png"></div>
+						     <span>Filtro Horizontal</span>
+						 </div>
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/HorizontalAbsolut.png"></div>
+						     <span>Filtro Horizontal com Absoluto</span>
+						 </div>
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/Vertical.png"></div>
+						     <span>Filtro Vertical</span>
+						 </div>
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/VerticalAbsolut.png"></div>
+						     <span>Filtro Vertical com Absoluto</span>
+						 </div>
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/Boost.png"></div>
+						     <span>Filtro Boost</span>
+						 </div>
+
+						 <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/BoostAbsolut.png"></div>
+						     <span>Filtro Boost com Absoluto</span>
+						 </div>
+
+
+
+				    <!--<h3 class="mt-5 mb-3">Code Block Example</h3>
 				    <p>You can get more info at <a href="https://highlightjs.org/" target="_blank">https://highlightjs.org/</a>. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. </p>
 				    <pre>
 					    <code>
@@ -393,7 +734,7 @@ export  $initHighlight;
 
 				    <div class="embed-responsive embed-responsive-16by9">
 					   <iframe width="560" height="315" src="https://www.youtube.com/embed/hnCmSXCZEpU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
-					</div>
+					</div>-->
 				   
 			    </div>
 				    
@@ -482,6 +823,7 @@ export  $initHighlight;
             <a id="config-close" class="close" href="#"><i class="fa fa-times-circle"></i></a>
         </div><!--//panel-inner-->
     </div><!--//configure-panel-->
+
 
     
        
