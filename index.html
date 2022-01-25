@@ -56,6 +56,7 @@
 					<li class="nav-item active"><a class="nav-link" href="#t2">Preenchendo Regiões  </a></li>
 					<li class="nav-item active"><a class="nav-link" href="#t3">Manipulação de histogramas  </a></li>
 					<li class="nav-item active"><a class="nav-link" href="#t4">Filtragem domínio espacial I </a></li>
+					<li class="nav-item active"><a class="nav-link" href="#t5">Detecção de Borda </a></li>
 					<!--<li class="nav-item active"><a class="nav-link" href="#t2">t5  </a></li>
 					<li class="nav-item active"><a class="nav-link" href="#t2">t6  </a></li>
 					<li class="nav-item active"><a class="nav-link" href="#t2">t7  </a></li>
@@ -648,6 +649,82 @@ while True:
 						     <span>Filtro Boost com Absoluto</span>
 						 </div>
 
+
+				    <h2 id="t5" class="posImg">Detecção de Borda com o algoritmo de Canny</h2>
+					<h4>Exercicio 1</h4>
+					<p style="color:#6C51A4;"><i>Utilizando os programas exemplos/canny.cpp e exemplos/pontilhismo.cpp como referência, implemente um programa cannypoints.cpp. A idéia é usar as bordas produzidas pelo algoritmo de Canny para melhorar a qualidade da imagem pontilhista gerada.</i> </p>
+
+		    
+					<p>Esse exercicio tem como objetivo a aplicação da técnica de pontilhismo e o algoritmo de canny para detecção de bordas. Para esta atividade é criada uma função denomidade de points() que irá varrer a imagem como um todo e fazer pontos na imagem de maneira randômica e com raios também de valores aleatórios </p> 
+
+					<p>Em seguida é aplicado o método Canny() da biblioteca do OpenCv de modo a detectar todas as bordas na imagem.</p> 
+
+					<pre>
+	<code class="hljs python">	
+import cv2 as cv
+import numpy as np
+import random
+
+img = cv.imread("../Fotos/levi.jpg",cv.IMREAD_GRAYSCALE)
+cv.imshow("inicial",img)
+
+# Função para adicionar pontos aleatoriamente na imagem
+def points(img1):
+    sizeImg = np.shape(img1)
+    height = sizeImg[0]
+    width = sizeImg[1]
+
+    radius = 4
+    imgPont = img1.copy()
+    for i in range(0,height,radius):
+        for j in range(0,width,radius):
+            number = random.randint(0,1)
+            if number == 0:
+                continue
+            gray = int(img1[i][j])
+            color = (gray, gray, gray)
+            cv.circle(imgPont, (j, i), radius, color, radius)
+            radius = random.randint(1, 5)
+
+	    return imgPont
+
+# Aplicando o filtro de Canny
+edgesImg = cv.Canny(img,100,200)
+imgPon = points(img)
+sizeImgPont = np.shape(img)
+heightPont = sizeImgPont[0]
+widthPont = sizeImgPont[1]
+
+radius2 = 3
+
+# Após aplicar o filtro de canny onde houver pixels com valor de 255 desenhará circulos
+for i in range(heightPont):
+    for j in range(widthPont):
+        if (edgesImg[i][j] == 255):
+            gray = int(img[i][j])
+            color = (gray, gray, gray)
+            cv.circle(imgPon, (j, i), radius2, color, radius2)
+
+
+cv.imshow("Imagem Final",imgPon)
+cv.imwrite("../Fotos/ImgFinal.jpg", imgPon)
+cv.waitKey(0)
+cv.destroyAllWindows()
+					    </code>
+</pre>
+				    <h5>Resultado:</h5>
+				    <!--<div class="ladoalado"><img src="assets/images/finallabble.png"></div>-->
+				    <div class="imgWithCaption" style="margin-bottom:30px">
+						 	<img src="assets/images/leviOriginal.png">
+						 	<span>Original</span>
+						    
+						 </div> 
+
+
+						  <div class="imgWithCaption">
+						 	 <div class="ladoalado"><img src="assets/images/leviFinal.png"></div>
+						     <span>Pontilhismo + Canny</span>
+						  </div>
 
 
 				    <!--<h3 class="mt-5 mb-3">Code Block Example</h3>
