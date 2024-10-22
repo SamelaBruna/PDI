@@ -1,2 +1,2 @@
 # DCA0445 PROCESSAMENTO DIGITAL DE IMAGENS - PDI
-Repositório criado para os projetos da disciplina de Processamento Digital de Imagens. 
+Repository created for projects in the Digital Image Processing discipline.
